@@ -22,9 +22,10 @@ public class Segment {
     }
 
     public String toSvg() {
-        return String.format("<svg height=\"100\" width=\"100\">\n" +
-                             "    <line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" style=\"stroke-width:2\" />\n" +
-                             "</svg>", pointOne.x, pointOne.y, pointTwo.x, pointTwo.y);
+        return String.format("""
+                <svg height="100" width="100">
+                    <line x1="%d" y1="%d" x2="%d" y2="%d" style="stroke-width:2" />
+                </svg>""", pointOne.x, pointOne.y, pointTwo.x, pointTwo.y);
     }
 
     public static Segment[] getPerpendicular(Segment segment, Point point) {
