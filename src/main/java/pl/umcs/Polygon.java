@@ -1,54 +1,44 @@
 package pl.umcs;
 
-public class Polygon extends Shape {
-    private Point[] points;
+public class Polygon implements Shape {
+    private Vec2[] vec2s;
 
-    public Polygon(int numberOfNodes) {
-        super(new Style("transparent", "black", 1));
+    public Polygon(Vec2[] vec2s) {
+        super();
 
-        this.points = new Point[numberOfNodes];
+        this.vec2s = vec2s;
     }
 
-    public Polygon(int numberOfNodes, Style style) {
-        super(style);
-
-        this.points = new Point[numberOfNodes];
-        this.style = style;
+    public void setPoints(Vec2 vec2, int index) {
+        this.vec2s[index] = vec2;
     }
 
-    public void setPoints(Point point, int index) {
-        this.points[index] = point;
+    public void setPoints(Vec2[] vec2s) {
+        this.vec2s = vec2s;
     }
 
-    public void setPoints(Point[] points) {
-        this.points = points;
-    }
+    public String toSvg(String style) {
+        StringBuilder verticesText = new StringBuilder("");
 
-    public String toSvg() {
-        StringBuilder polygonSvg = new StringBuilder("<svg height=\"100\" width=\"100\">\n" + "    <polygon points=\"");
-
-        for (Point point : points) {
-            polygonSvg.append(String.format("%d,%d ", point.x, point.y));
+        for (Vec2 vec2 : vec2s) {
+            verticesText.append(String.format("%d,%d ", vec2.x, vec2.y));
         }
-        polygonSvg.append(String.format("\" %s />\n" + "</svg>", this.style.toSvg()));
 
-        return polygonSvg.toString();
+        return String.format("<polygon points=\"%s\" %s />", verticesText, style);
     }
 
-    public static Polygon square(Segment line, Style style) {
-        Point middlePoint = new Point((line.getPointOne().x + line.getPointTwo().x) / 2,
+    public static Polygon square(Segment line) {
+        Vec2 middleVec2 = new Vec2((line.getPointOne().x + line.getPointTwo().x) / 2,
                                       (line.getPointOne().y + line.getPointTwo().y) / 2);
-        Segment perpendicularLine = Segment.getPerpendicular(line, middlePoint)[0];
+        Segment perpendicularLine = Segment.getPerpendicular(line, middleVec2)[0];
 
-        Point[] vertices = {
-                new Point(line.getPointOne().x, line.getPointOne().y),
-                new Point(line.getPointTwo().x, line.getPointTwo().y),
-                new Point(perpendicularLine.getPointOne().x, perpendicularLine.getPointOne().y),
-                new Point(perpendicularLine.getPointTwo().x, perpendicularLine.getPointTwo().y)
+        Vec2[] vertices = {
+                new Vec2(line.getPointOne().x, line.getPointOne().y),
+                new Vec2(line.getPointTwo().x, line.getPointTwo().y),
+                new Vec2(perpendicularLine.getPointOne().x, perpendicularLine.getPointOne().y),
+                new Vec2(perpendicularLine.getPointTwo().x, perpendicularLine.getPointTwo().y)
         };
-        Polygon square = new Polygon(4, style);
-        square.setPoints(vertices);
 
-        return square;
+        return new Polygon(vertices);
     }
 }
